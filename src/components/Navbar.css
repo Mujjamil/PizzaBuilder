@@ -269,4 +269,7 @@
         max-height: 100px;
         padding-top: 2px;
     }
+    .hero__image-wrap{
+        margin-top: 50px;
+    }
 }
