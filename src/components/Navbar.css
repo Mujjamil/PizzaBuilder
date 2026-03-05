@@ -265,6 +265,8 @@
     }
 
     .navbar__logo-img {
-        height: 200px;
+        height: 100px;
+        max-height: 100px;
+        padding-top: 2px;
     }
 }
