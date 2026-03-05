@@ -165,32 +165,87 @@
     color: var(--gray-500);
 }
 
-/* Size buttons */
+/* Size / Pizza selector buttons */
 .size-options {
     display: flex;
+    flex-direction: column;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 }
 
 .size-btn {
-    flex: 1;
-    padding: 10px 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
     border-radius: var(--radius-sm);
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: var(--bg-elevated);
     color: var(--gray-300);
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.82rem;
+    font-weight: 500;
     cursor: pointer;
     transition: var(--transition);
     font-family: var(--font-sans);
+    text-align: left;
+}
+
+.size-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--gray-300);
+    flex-shrink: 0;
+    letter-spacing: 0;
+}
+
+.size-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.size-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.2;
+}
+
+.size-desc {
+    font-size: 0.68rem;
+    color: var(--gray-500);
+}
+
+.size-price {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
 }
 
 .size-btn.active {
-    background: rgba(201, 168, 76, 0.12);
+    background: rgba(201, 168, 76, 0.10);
     border-color: var(--gold);
-    color: var(--gold);
-    box-shadow: 0 0 12px rgba(201, 168, 76, 0.15);
+    box-shadow: 0 0 12px rgba(201, 168, 76, 0.12);
+}
+
+.size-btn.active .size-badge {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #000;
+}
+
+.size-btn.active .size-name {
+    color: var(--white);
 }
 
 .size-btn:hover:not(.active) {
@@ -644,6 +699,15 @@
     color: var(--gold-light);
 }
 
+.order-item__base-price {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
 /* Additions */
 .order-additions {
     display: flex;
@@ -670,10 +734,47 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-.addition-row span:last-child {
+.addition-row__right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: var(--gold);
     font-weight: 600;
     font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.addition-remove {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(220, 50, 50, 0.12);
+    border: 1px solid rgba(220, 50, 50, 0.25);
+    color: #e05c5c;
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    padding: 0;
+    line-height: 1;
+    font-family: var(--font-sans);
+}
+
+.addition-remove:hover {
+    background: rgba(220, 50, 50, 0.3);
+    border-color: rgba(220, 50, 50, 0.5);
+    color: #ff6b6b;
+    transform: scale(1.1);
+}
+
+.add-order-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Delivery badge */

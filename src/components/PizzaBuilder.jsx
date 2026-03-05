@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
-import { sauces, cheeses, toppings } from '../data/pizzas';
+import { useState } from 'react';
+import { sauces, cheeses, toppings, signaturePizzas } from '../data/pizzas';
 import './PizzaBuilder.css';
 
-// Pizza visualization - layered SVG/CSS approach
 const PIZZA_BASE_IMAGE = '/cheesepizza.png';
 
-// Topping positions on pizza (percentage-based)
 const TOPPING_POSITIONS = [
     { x: 50, y: 30 }, { x: 70, y: 45 }, { x: 35, y: 55 }, { x: 60, y: 65 },
     { x: 45, y: 42 }, { x: 28, y: 38 }, { x: 65, y: 30 }, { x: 55, y: 56 },
@@ -13,18 +11,19 @@ const TOPPING_POSITIONS = [
 ];
 
 export default function PizzaBuilder({ setCartCount }) {
-    const [selectedCrust, setSelectedCrust] = useState({ id: 'neapolitan', label: 'Neapolitan', icon: '🍕', price: 0 });
-    const [selectedSauce, setSelectedSauce] = useState(sauces[0]);
-    const [selectedCheese, setSelectedCheese] = useState(cheeses[0]);
+    const [selectedBasePizza, setSelectedBasePizza] = useState(null);
+    const [selectedSauce, setSelectedSauce] = useState(null);
+    const [selectedCheese, setSelectedCheese] = useState(null);
     const [selectedToppings, setSelectedToppings] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [addedToCart, setAddedToCart] = useState(false);
     const [orderNumber] = useState(() => Math.floor(Math.random() * 9000) + 1000);
 
+    const basePizzaPrice = selectedBasePizza ? selectedBasePizza.price : 0;
     const toppingExtras = selectedToppings.reduce((sum, t) => sum + t.price, 0);
-    const cheeseExtra = selectedCheese.price;
-    const sauceExtra = selectedSauce.price;
-    const unitPrice = sauceExtra + cheeseExtra + toppingExtras;
+    const cheeseExtra = selectedCheese ? selectedCheese.price : 0;
+    const sauceExtra = selectedSauce ? selectedSauce.price : 0;
+    const unitPrice = basePizzaPrice + sauceExtra + cheeseExtra + toppingExtras;
     const totalPrice = unitPrice * quantity;
 
     const toggleTopping = (topping) => {
@@ -34,6 +33,10 @@ export default function PizzaBuilder({ setCartCount }) {
                 : [...prev, topping]
         );
     };
+
+    const removeSauce = () => setSelectedSauce(null);
+    const removeCheese = () => setSelectedCheese(null);
+    const removeTopping = (id) => setSelectedToppings((prev) => prev.filter((t) => t.id !== id));
 
     const handleAddToCart = () => {
         setAddedToCart(true);
@@ -67,6 +70,8 @@ export default function PizzaBuilder({ setCartCount }) {
                 <div className="builder__layout">
                     {/* ===== LEFT PANEL ===== */}
                     <LeftPanel
+                        selectedBasePizza={selectedBasePizza}
+                        setSelectedBasePizza={setSelectedBasePizza}
                         selectedSauce={selectedSauce}
                         setSelectedSauce={setSelectedSauce}
                         selectedCheese={selectedCheese}
@@ -83,6 +88,7 @@ export default function PizzaBuilder({ setCartCount }) {
 
                     {/* ===== RIGHT PANEL ===== */}
                     <RightPanel
+                        selectedBasePizza={selectedBasePizza}
                         selectedSauce={selectedSauce}
                         selectedCheese={selectedCheese}
                         selectedToppings={selectedToppings}
@@ -92,6 +98,9 @@ export default function PizzaBuilder({ setCartCount }) {
                         unitPrice={unitPrice}
                         handleAddToCart={handleAddToCart}
                         addedToCart={addedToCart}
+                        removeSauce={removeSauce}
+                        removeCheese={removeCheese}
+                        removeTopping={removeTopping}
                     />
                 </div>
             </div>
@@ -100,9 +109,29 @@ export default function PizzaBuilder({ setCartCount }) {
 }
 
 /* ===== LEFT PANEL ===== */
-function LeftPanel({ selectedSauce, setSelectedSauce, selectedCheese, setSelectedCheese, selectedToppings, toggleTopping }) {
+function LeftPanel({ selectedBasePizza, setSelectedBasePizza, selectedSauce, setSelectedSauce, selectedCheese, setSelectedCheese, selectedToppings, toggleTopping }) {
     return (
         <aside className="panel panel--left">
+
+            {/* Pizza Size / Base */}
+            <BuilderSection title="Choose Your Pizza" icon="🍕">
+                <div className="size-options">
+                    {signaturePizzas.map((p) => (
+                        <button
+                            key={p.id}
+                            className={`size-btn ${selectedBasePizza?.id === p.id ? 'active' : ''}`}
+                            onClick={() => setSelectedBasePizza(p)}
+                        >
+                            <span className="size-badge">{p.badges[0]}</span>
+                            <div className="size-info">
+                                <span className="size-name">{p.name}</span>
+                                <span className="size-desc">{p.description}</span>
+                            </div>
+                            <span className="size-price">₹{p.price}</span>
+                        </button>
+                    ))}
+                </div>
+            </BuilderSection>
 
             {/* Sauce */}
             <BuilderSection title="Sauce Base" icon="🍅">
@@ -110,13 +139,13 @@ function LeftPanel({ selectedSauce, setSelectedSauce, selectedCheese, setSelecte
                     {sauces.map((s) => (
                         <button
                             key={s.id}
-                            className={`sauce-btn ${selectedSauce.id === s.id ? 'active' : ''}`}
+                            className={`sauce-btn ${selectedSauce?.id === s.id ? 'active' : ''}`}
                             onClick={() => setSelectedSauce(s)}
                             title={s.label}
                         >
                             <span
                                 className="sauce-circle"
-                                style={{ background: s.color, boxShadow: selectedSauce.id === s.id ? `0 0 12px ${s.color}88` : 'none' }}
+                                style={{ background: s.color, boxShadow: selectedSauce?.id === s.id ? `0 0 12px ${s.color}88` : 'none' }}
                             />
                             <span className="sauce-label">{s.label}</span>
                             {s.price > 0 && <span className="option-price">+₹{s.price}</span>}
@@ -131,11 +160,11 @@ function LeftPanel({ selectedSauce, setSelectedSauce, selectedCheese, setSelecte
                     {cheeses.map((c) => (
                         <button
                             key={c.id}
-                            className={`cheese-btn ${selectedCheese.id === c.id ? 'active' : ''}`}
+                            className={`cheese-btn ${selectedCheese?.id === c.id ? 'active' : ''}`}
                             onClick={() => setSelectedCheese(c)}
                         >
                             <div className="cheese-radio">
-                                {selectedCheese.id === c.id && <div className="cheese-radio-dot" />}
+                                {selectedCheese?.id === c.id && <div className="cheese-radio-dot" />}
                             </div>
                             <div className="cheese-info">
                                 <span className="cheese-name">{c.label}</span>
@@ -182,25 +211,16 @@ function CenterPanel({ selectedSauce, selectedToppings }) {
     return (
         <div className="panel panel--center">
             <div className="pizza-preview">
-                {/* Pizza visualization */}
                 <div className="pizza-canvas">
-                    {/* Outer glow ring */}
                     <div
                         className="pizza-ring"
-                        style={{ boxShadow: `0 0 60px ${selectedSauce.color}44, inset 0 0 40px rgba(0,0,0,0.3)` }}
+                        style={{ boxShadow: selectedSauce ? `0 0 60px ${selectedSauce.color}44, inset 0 0 40px rgba(0,0,0,0.3)` : 'none' }}
                     />
-
-                    {/* Pizza image */}
                     <img
                         src={PIZZA_BASE_IMAGE}
                         alt="Your pizza"
                         className="pizza-canvas__img"
-                        style={{
-                            filter: `hue-rotate(${selectedSauce.id === 'bianca' ? '0' : selectedSauce.id === 'pesto' ? '60' : '0'}deg)`,
-                        }}
                     />
-
-                    {/* Topping overlays */}
                     {selectedToppings.map((topping, i) => {
                         const pos = TOPPING_POSITIONS[i % TOPPING_POSITIONS.length];
                         return (
@@ -219,8 +239,6 @@ function CenterPanel({ selectedSauce, selectedToppings }) {
                     })}
                 </div>
 
-
-                {/* Action buttons */}
                 <div className="pizza-actions">
                     <button className="pizza-action-btn" title="Undo">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -246,7 +264,9 @@ function CenterPanel({ selectedSauce, selectedToppings }) {
 }
 
 /* ===== RIGHT PANEL ===== */
-function RightPanel({ selectedSauce, selectedCheese, selectedToppings, quantity, setQuantity, totalPrice, unitPrice, handleAddToCart, addedToCart }) {
+function RightPanel({ selectedBasePizza, selectedSauce, selectedCheese, selectedToppings, quantity, setQuantity, totalPrice, unitPrice, handleAddToCart, addedToCart, removeSauce, removeCheese, removeTopping }) {
+    const hasAdditions = (selectedSauce && selectedSauce.price > 0) || (selectedCheese && selectedCheese.price > 0) || selectedToppings.length > 0;
+
     return (
         <aside className="panel panel--right">
             <div className="order-summary">
@@ -258,33 +278,67 @@ function RightPanel({ selectedSauce, selectedCheese, selectedToppings, quantity,
                 <div className="order-item order-item--base">
                     <div className="order-item__icon">🍕</div>
                     <div className="order-item__info">
-                        <div className="order-item__name">Custom Pizza</div>
+                        <div className="order-item__name">
+                            {selectedBasePizza ? selectedBasePizza.name : 'Custom Pizza'}
+                        </div>
                         <div className="order-item__detail">
-                            {selectedSauce.label} • {selectedCheese.label}
+                            {selectedBasePizza
+                                ? selectedBasePizza.description
+                                : 'Select a pizza size to start'}
                         </div>
                     </div>
+                    {selectedBasePizza && (
+                        <span className="order-item__base-price">₹{selectedBasePizza.price}</span>
+                    )}
                 </div>
 
                 {/* Additions */}
-                {(selectedSauce.price > 0 || selectedCheese.price > 0 || selectedToppings.length > 0) && (
+                {hasAdditions && (
                     <div className="order-additions">
                         <div className="order-additions__label">Additions</div>
-                        {selectedSauce.price > 0 && (
+
+                        {selectedSauce && selectedSauce.price > 0 && (
                             <div className="addition-row">
                                 <span>{selectedSauce.label} sauce</span>
-                                <span>+₹{selectedSauce.price}</span>
+                                <span className="addition-row__right">
+                                    <span>+₹{selectedSauce.price}</span>
+                                    <button
+                                        className="addition-remove"
+                                        onClick={removeSauce}
+                                        title="Remove sauce"
+                                        aria-label="Remove sauce"
+                                    >✕</button>
+                                </span>
                             </div>
                         )}
-                        {selectedCheese.price > 0 && (
+
+                        {selectedCheese && selectedCheese.price > 0 && (
                             <div className="addition-row">
                                 <span>{selectedCheese.label}</span>
-                                <span>+₹{selectedCheese.price}</span>
+                                <span className="addition-row__right">
+                                    <span>+₹{selectedCheese.price}</span>
+                                    <button
+                                        className="addition-remove"
+                                        onClick={removeCheese}
+                                        title="Remove cheese"
+                                        aria-label="Remove cheese"
+                                    >✕</button>
+                                </span>
                             </div>
                         )}
+
                         {selectedToppings.map((t) => (
                             <div key={t.id} className="addition-row">
                                 <span>{t.label}</span>
-                                <span>+₹{t.price}</span>
+                                <span className="addition-row__right">
+                                    <span>+₹{t.price}</span>
+                                    <button
+                                        className="addition-remove"
+                                        onClick={() => removeTopping(t.id)}
+                                        title={`Remove ${t.label}`}
+                                        aria-label={`Remove ${t.label}`}
+                                    >✕</button>
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -329,6 +383,7 @@ function RightPanel({ selectedSauce, selectedCheese, selectedToppings, quantity,
                 <button
                     className={`add-order-btn ${addedToCart ? 'added' : ''}`}
                     onClick={handleAddToCart}
+                    disabled={!selectedBasePizza}
                 >
                     {addedToCart ? (
                         <>
@@ -339,10 +394,12 @@ function RightPanel({ selectedSauce, selectedCheese, selectedToppings, quantity,
                         </>
                     ) : (
                         <>
-                            Add to Order
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-                            </svg>
+                            {selectedBasePizza ? 'Add to Order' : 'Select a Pizza First'}
+                            {selectedBasePizza && (
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            )}
                         </>
                     )}
                 </button>
