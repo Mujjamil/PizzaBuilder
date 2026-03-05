@@ -157,6 +157,7 @@
 .btn-gold--sm {
     padding: 9px 20px;
     font-size: 0.78rem;
+    white-space: nowrap;
 }
 
 /* Hamburger */
@@ -248,6 +249,15 @@
     }
 
     .btn-gold--sm {
+        background: transparent;
+        border: 1px solid rgba(201, 168, 76, 0.6);
+        color: var(--gold);
+        padding: 6px 12px;
+        font-size: 0.72rem;
+        white-space: nowrap;
+    }
+
+    .btn-gold--sm::before {
         display: none;
     }
 
@@ -261,6 +271,7 @@
 
     .navbar {
         height: 60px;
+        padding: 0px;
     }
 
     .navbar__logo-img {
@@ -269,7 +280,8 @@
         margin-top: 20px;
         padding: 2px;
     }
-    .hero__image-wrap{
+
+    .hero__image-wrap {
         margin-top: 50px;
     }
 }
