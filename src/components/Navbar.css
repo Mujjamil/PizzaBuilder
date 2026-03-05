@@ -48,8 +48,8 @@
     width: auto;
     display: block;
     object-fit: contain;
-    transition: opacity 0.2s ease, transform 0.3s ease;
     padding-top: 40px;
+    transition: opacity 0.2s ease, transform 0.3s ease;
 }
 
 .navbar__logo:hover .navbar__logo-img {
@@ -257,5 +257,14 @@
 
     .navbar__mobile-menu {
         display: flex;
+    }
+
+    .navbar {
+        height: 60px;
+        padding: 0 16px;
+    }
+
+    .navbar__logo-img {
+        height: 200px;
     }
 }

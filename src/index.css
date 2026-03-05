@@ -35,9 +35,17 @@
 }
 
 /* Reset & Base */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   background-color: var(--bg-primary);
@@ -48,10 +56,27 @@ body {
   overflow-x: hidden;
 }
 
-img { display: block; max-width: 100%; }
-a { text-decoration: none; color: inherit; }
-button { cursor: pointer; border: none; background: none; font-family: var(--font-sans); }
-ul, ol { list-style: none; }
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+}
+
+ul,
+ol {
+  list-style: none;
+}
 
 /* ===== SHARED COMPONENTS ===== */
 
@@ -83,10 +108,23 @@ ul, ol { list-style: none; }
   transition: var(--transition);
 }
 
-.btn-gold:hover::before { opacity: 1; }
-.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(201, 168, 76, 0.4); }
-.btn-gold span { position: relative; z-index: 1; }
-.btn-gold:active { transform: translateY(0); }
+.btn-gold:hover::before {
+  opacity: 1;
+}
+
+.btn-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.4);
+}
+
+.btn-gold span {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+}
 
 /* Ghost Button */
 .btn-ghost {
@@ -162,7 +200,36 @@ ul, ol { list-style: none; }
 }
 
 /* ===== SCROLLBAR ===== */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: var(--gray-700); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-700);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dark);
+}
+
+/* ===== RESPONSIVE GLOBAL ===== */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .section-header {
+    margin-bottom: 40px;
+  }
+
+  .btn-gold,
+  .btn-ghost {
+    font-size: 0.8rem;
+    padding: 11px 20px;
+  }
+}

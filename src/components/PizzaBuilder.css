@@ -864,6 +864,7 @@
     .builder__layout {
         grid-template-columns: 1fr;
         gap: 0;
+        padding: 0;
     }
 
     .panel--left,
@@ -885,11 +886,62 @@
         height: 300px;
     }
 
-    .builder__layout {
-        padding: 0;
+    .panel {
+        padding: 24px;
+    }
+
+    .builder__header-inner {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .builder__order-info {
+        align-items: flex-start;
+        flex-direction: row;
+        gap: 12px;
+    }
+
+    .builder__title {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .builder__header {
+        padding: 16px 0;
+        top: 60px;
+    }
+
+    .builder {
+        padding-top: 60px;
+    }
+
+    .pizza-canvas {
+        width: 240px;
+        height: 240px;
+    }
+
+    .pizza-preview {
+        max-width: 100%;
+    }
+
+    .topping-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .order-summary {
+        padding: 16px;
+    }
+
+    .total-price {
+        font-size: 1.8rem;
+    }
+
+    .builder__order-info {
+        flex-wrap: wrap;
     }
 
     .panel {
-        padding: 24px;
+        padding: 16px;
     }
 }

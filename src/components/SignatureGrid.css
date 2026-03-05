@@ -250,4 +250,28 @@
     .sig-grid {
         padding: 80px 0;
     }
+
+    .sig-grid__filters {
+        margin-bottom: 40px;
+        gap: 6px;
+    }
+
+    .filter-btn {
+        padding: 7px 14px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sig-grid {
+        padding: 60px 0;
+    }
+
+    .sig-grid__cards {
+        gap: 16px;
+    }
+
+    .pizza-card__img-wrap {
+        height: 180px;
+    }
 }
