@@ -1,0 +1,9 @@
+/* ===== APP ===== */
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}

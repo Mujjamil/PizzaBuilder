@@ -1,0 +1,31 @@
+<svg width="220" height="56" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pizza slice icon mark -->
+  <g transform="translate(0, 3)">
+    <!-- Outer crust ring -->
+    <circle cx="24" cy="24" r="22" fill="#1a1a1a" stroke="#c9a84c" stroke-width="1.5" opacity="0.9"/>
+    <!-- Sauce / base fill -->
+    <circle cx="24" cy="24" r="17" fill="#8B1A1A" opacity="0.85"/>
+    <!-- Cheese layer -->
+    <circle cx="24" cy="24" r="13" fill="#e8c56a" opacity="0.7"/>
+    <!-- Slice cut lines -->
+    <line x1="24" y1="7" x2="24" y2="41" stroke="#1a1a1a" stroke-width="1.2" opacity="0.6"/>
+    <line x1="9" y1="15" x2="39" y2="33" stroke="#1a1a1a" stroke-width="1.2" opacity="0.6"/>
+    <line x1="9" y1="33" x2="39" y2="15" stroke="#1a1a1a" stroke-width="1.2" opacity="0.6"/>
+    <!-- Topping dots (pepperoni style) -->
+    <circle cx="24" cy="17" r="2.5" fill="#c0392b" stroke="#a93226" stroke-width="0.5"/>
+    <circle cx="18" cy="27" r="2" fill="#c0392b" stroke="#a93226" stroke-width="0.5"/>
+    <circle cx="30" cy="27" r="2" fill="#c0392b" stroke="#a93226" stroke-width="0.5"/>
+    <!-- Gold rim accent -->
+    <circle cx="24" cy="24" r="22" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+  </g>
+
+  <!-- Brand text -->
+  <text x="58" y="28" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700" fill="#ffffff" letter-spacing="-0.5">Slice</text>
+  <text x="110" y="28" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700" fill="#c9a84c" letter-spacing="-0.5">Craft</text>
+
+  <!-- Tagline -->
+  <text x="59" y="44" font-family="'Inter', Arial, sans-serif" font-size="8" font-weight="600" fill="#5a554d" letter-spacing="2.5">ARTISAN PIZZA</text>
+
+  <!-- Gold underline accent below tagline -->
+  <rect x="59" y="47" width="45" height="1" fill="#c9a84c" opacity="0.5" rx="0.5"/>
+</svg>

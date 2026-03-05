@@ -1,0 +1,253 @@
+/* ===== SIGNATURE GRID ===== */
+.sig-grid {
+    padding: 120px 0;
+    position: relative;
+}
+
+.sig-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201, 168, 76, 0.2), transparent);
+}
+
+/* Filter tabs */
+.sig-grid__filters {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 64px;
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: var(--gray-300);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: var(--font-sans);
+}
+
+.filter-btn:hover {
+    color: var(--white);
+    border-color: rgba(201, 168, 76, 0.3);
+}
+
+.filter-btn.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201, 168, 76, 0.08);
+}
+
+/* Cards Grid */
+.sig-grid__cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+/* Pizza Card */
+.pizza-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1),
+        box-shadow 0.4s cubic-bezier(0.2, 0, 0, 1),
+        border-color 0.3s ease;
+    position: relative;
+}
+
+.pizza-card--hovered {
+    transform: translateY(-8px);
+    border-color: rgba(201, 168, 76, 0.35);
+    box-shadow:
+        0 0 0 1px rgba(201, 168, 76, 0.1),
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(201, 168, 76, 0.08);
+}
+
+/* Image */
+.pizza-card__img-wrap {
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+}
+
+.pizza-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.pizza-card--hovered .pizza-card__img {
+    transform: scale(1.06);
+}
+
+.pizza-card__img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(10, 10, 10, 0.85) 100%);
+}
+
+.pizza-card__tag {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    border: 1px solid;
+    backdrop-filter: blur(8px);
+}
+
+/* Content */
+.pizza-card__content {
+    padding: 20px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pizza-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pizza-card__name {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.3;
+}
+
+.pizza-card__price {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    font-style: italic;
+    white-space: nowrap;
+}
+
+.pizza-card__desc {
+    font-size: 0.82rem;
+    color: var(--gray-300);
+    line-height: 1.6;
+}
+
+/* Footer */
+.pizza-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pizza-card__badges {
+    display: flex;
+    gap: 6px;
+}
+
+.badge-chip {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--gray-300);
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
+}
+
+.pizza-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: rgba(201, 168, 76, 0.08);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: var(--transition);
+    cursor: pointer;
+    font-family: var(--font-sans);
+}
+
+.pizza-card__cta:hover {
+    background: rgba(201, 168, 76, 0.15);
+    border-color: var(--gold);
+}
+
+/* Footer */
+.sig-grid__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 64px;
+}
+
+.discover-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--gray-300);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: var(--font-sans);
+}
+
+.discover-btn:hover {
+    color: var(--gold);
+    border-color: rgba(201, 168, 76, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .sig-grid__cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .sig-grid__cards {
+        grid-template-columns: 1fr;
+    }
+
+    .sig-grid {
+        padding: 80px 0;
+    }
+}
