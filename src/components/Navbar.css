@@ -265,9 +265,10 @@
     }
 
     .navbar__logo-img {
-        height: 100px;
-        max-height: 100px;
-        padding-top: 2px;
+        height: 150px;
+        max-height: 150px;
+        margin-top: 20px;
+        padding: 2px;
     }
     .hero__image-wrap{
         margin-top: 50px;
