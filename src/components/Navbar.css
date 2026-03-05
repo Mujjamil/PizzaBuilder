@@ -285,3 +285,48 @@
         margin-top: 50px;
     }
 }
+
+/* ===== TABLET (iPad) ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .navbar {
+        height: 80px;
+        padding: 0 20px;
+    }
+
+    .navbar__logo-img {
+        height: 180px;
+        max-height: 180px;
+        padding-top: 30px;
+    }
+
+    .navbar__links {
+        display: flex;
+        gap: 2px;
+    }
+
+    .navbar__link {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    .navbar__hamburger {
+        display: none;
+    }
+
+    .navbar__mobile-menu {
+        display: none;
+    }
+
+    .btn-gold--sm {
+        background: transparent;
+        border: 1px solid rgba(201, 168, 76, 0.6);
+        color: var(--gold);
+        padding: 8px 16px;
+        font-size: 0.78rem;
+        white-space: nowrap;
+    }
+
+    .btn-gold--sm::before {
+        display: none;
+    }
+}

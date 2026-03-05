@@ -860,7 +860,7 @@
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 750px) {
     .builder__layout {
         grid-template-columns: 1fr;
         gap: 0;
