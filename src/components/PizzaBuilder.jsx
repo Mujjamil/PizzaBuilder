@@ -3,7 +3,7 @@ import { sauces, cheeses, toppings } from '../data/pizzas';
 import './PizzaBuilder.css';
 
 // Pizza visualization - layered SVG/CSS approach
-const PIZZA_BASE_IMAGE = 'public/cheesepizza.png';
+const PIZZA_BASE_IMAGE = '/cheesepizza.png';
 
 // Topping positions on pizza (percentage-based)
 const TOPPING_POSITIONS = [

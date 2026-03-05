@@ -64,7 +64,7 @@ export default function Hero({ setCurrentPage }) {
                     <div className="hero__image-glow" />
                     <div className="hero__image-ring" />
                     <img
-                        src="public/veggie.png"
+                        src="/veggie.png"
                         alt="Artisan pizza"
                         className="hero__image"
                     />

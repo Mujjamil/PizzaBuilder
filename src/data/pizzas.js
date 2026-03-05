@@ -6,7 +6,7 @@ export const signaturePizzas = [
     tag: "bestseller",
     tagLabel: "⭐ Bestseller",
     description: "Plain Small Pizza Which You can Customize",
-    image: "public/cheese pizzzzz.png",
+    image: "/cheesepizza.png",
     badges: ["S"],
   },
   {
@@ -16,7 +16,7 @@ export const signaturePizzas = [
     tag: "bestseller",
     tagLabel: "⭐ Bestseller",
     description: "Plain Medium Pizza Which You can Customize",
-    image: "public/cheese pizzzzz.png",
+    image: "/cheesepizza.png",
     badges: ["M"],
   },
   {
@@ -26,7 +26,7 @@ export const signaturePizzas = [
     tag: "bestseller",
     tagLabel: "⭐ Bestseller",
     description: "Plain Large Pizza Which You can Customize",
-    image: "public/cheese pizzzzz.png",
+    image: "/cheesepizza.png",
     badges: ["L"],
   },
 ];
