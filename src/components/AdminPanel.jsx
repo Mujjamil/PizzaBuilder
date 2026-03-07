@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { getOrders } from '../utils/ordersDB';
+import { useState, useEffect, useRef } from 'react';
+import { subscribeToOrders } from '../utils/ordersDB';
 import './AdminPanel.css';
 
 const ADMIN_PASSWORD = 'FirstCup@2026';
@@ -13,20 +13,66 @@ export default function AdminPanel() {
     const [error, setError] = useState('');
     const [search, setSearch] = useState('');
     const [expandedOrder, setExpandedOrder] = useState(null);
+    const [notifPermission, setNotifPermission] = useState(Notification.permission);
+    const [newOrderFlash, setNewOrderFlash] = useState(null);
+    const audioCtxRef = useRef(null);
+
+    // Play a beep using Web Audio API (works without audio files)
+    const playBeep = () => {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = 880;
+            osc.type = 'sine';
+            gain.gain.setValueAtTime(0.4, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.5);
+        } catch { }
+    };
+
+    // Request notification permission
+    const requestNotifPermission = async () => {
+        const result = await Notification.requestPermission();
+        setNotifPermission(result);
+    };
+
+    // Show browser notification for a new order
+    const showNotification = (order) => {
+        playBeep();
+        setNewOrderFlash(order);
+        setTimeout(() => setNewOrderFlash(null), 5000);
+        if (Notification.permission === 'granted') {
+            new Notification('🍕 New Order Received!', {
+                body: `${order.customerName} — ${order.orderNumber} — ₹${order.total}`,
+                icon: '/fc.svg',
+                tag: order.orderNumber,
+                requireInteraction: true,
+            });
+        }
+    };
 
     useEffect(() => {
         if (!authed) return;
         setLoading(true);
-        getOrders()
-            .then(setOrders)
-            .catch(() => setError('Failed to load orders. Check Firestore connection.'))
-            .finally(() => setLoading(false));
+        const unsub = subscribeToOrders(
+            showNotification,           // called on every NEW order
+            (all) => {                  // called with updated full list
+                setOrders(all);
+                setLoading(false);
+            }
+        );
+        return () => unsub(); // cleanup on unmount
     }, [authed]);
 
     const handleLogin = (e) => {
         e.preventDefault();
         if (passwordInput === ADMIN_PASSWORD) {
             setAuthed(true);
+            requestNotifPermission();
         } else {
             setPasswordError('Incorrect password.');
             setPasswordInput('');
@@ -70,18 +116,33 @@ export default function AdminPanel() {
                     <h1>Order Dashboard</h1>
                 </div>
                 <div className="admin-header__right">
+                    {notifPermission !== 'granted' && (
+                        <button className="admin-notif-btn" onClick={requestNotifPermission}>
+                            🔔 Enable Notifications
+                        </button>
+                    )}
+                    {notifPermission === 'granted' && (
+                        <span className="admin-notif-on">🔔 Notifications On</span>
+                    )}
                     <span className="admin-badge">
                         <span className="admin-badge__dot" />
                         {orders.length} orders today
                     </span>
                     <button className="admin-refresh" onClick={() => {
                         setLoading(true);
-                        getOrders().then(setOrders).finally(() => setLoading(false));
+                        subscribeToOrders(null, (all) => { setOrders(all); setLoading(false); });
                     }}>
                         ↻ Refresh
                     </button>
                 </div>
             </div>
+
+            {/* New Order Flash Banner */}
+            {newOrderFlash && (
+                <div className="admin-new-order-banner">
+                    🍕 New order from <strong>{newOrderFlash.customerName}</strong> — {newOrderFlash.orderNumber} — <strong>₹{newOrderFlash.total}</strong>
+                </div>
+            )}
 
             {/* Search */}
             <div className="admin-search-bar">

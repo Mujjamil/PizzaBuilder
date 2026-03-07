@@ -6,6 +6,7 @@ import {
     where,
     getDocs,
     orderBy,
+    onSnapshot,
     serverTimestamp,
 } from 'firebase/firestore';
 
@@ -63,4 +64,33 @@ export async function getOrders() {
     );
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+}
+
+// Real-time listener — calls onAdded(order) whenever a NEW order arrives
+export function subscribeToOrders(onAdded, onListUpdate) {
+    const q = query(
+        collection(db, ORDERS_COLLECTION),
+        orderBy('createdAt', 'desc')
+    );
+
+    let initialized = false;
+    const unsub = onSnapshot(q, (snapshot) => {
+        const all = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        if (onListUpdate) onListUpdate(all);
+
+        if (!initialized) {
+            initialized = true;
+            return; // skip notifications on first load (existing orders)
+        }
+
+        // Fire onAdded for each genuinely new document added since we started listening
+        snapshot.docChanges().forEach((change) => {
+            if (change.type === 'added') {
+                const order = { id: change.doc.id, ...change.doc.data() };
+                if (onAdded) onAdded(order);
+            }
+        });
+    });
+
+    return unsub; // call to stop listening
 }
