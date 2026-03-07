@@ -3,16 +3,30 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import SignatureGrid from './components/SignatureGrid';
 import PizzaBuilder from './components/PizzaBuilder';
+import CartDrawer from './components/CartDrawer';
 import Footer from './components/Footer';
 import './App.css';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
 
   return (
     <div className="app">
-      <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} cartCount={cartCount} />
+      <Navbar
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        cartCount={cartItems.length}
+        onCartOpen={() => setCartOpen(true)}
+      />
+
+      <CartDrawer
+        isOpen={cartOpen}
+        onClose={() => setCartOpen(false)}
+        cartItems={cartItems}
+        setCartItems={setCartItems}
+      />
 
       {currentPage === 'home' ? (
         <>
@@ -22,7 +36,7 @@ export default function App() {
         </>
       ) : (
         <>
-          <PizzaBuilder setCartCount={setCartCount} />
+          <PizzaBuilder cartItems={cartItems} setCartItems={setCartItems} />
           <Footer />
         </>
       )}

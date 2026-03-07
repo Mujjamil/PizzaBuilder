@@ -10,7 +10,7 @@ const TOPPING_POSITIONS = [
     { x: 38, y: 68 }, { x: 72, y: 58 }, { x: 48, y: 22 }, { x: 30, y: 50 },
 ];
 
-export default function PizzaBuilder({ setCartCount }) {
+export default function PizzaBuilder({ setCartItems }) {
     const [selectedBasePizza, setSelectedBasePizza] = useState(null);
     const [selectedSauce, setSelectedSauce] = useState(null);
     const [selectedCheese, setSelectedCheese] = useState(null);
@@ -39,8 +39,22 @@ export default function PizzaBuilder({ setCartCount }) {
     const removeTopping = (id) => setSelectedToppings((prev) => prev.filter((t) => t.id !== id));
 
     const handleAddToCart = () => {
+        if (!selectedBasePizza) return;
+        const additions = [
+            ...(selectedSauce ? [`${selectedSauce.label} sauce`] : []),
+            ...(selectedCheese ? [selectedCheese.label] : []),
+            ...selectedToppings.map((t) => t.label),
+        ];
+        setCartItems((prev) => [
+            ...prev,
+            {
+                pizzaName: selectedBasePizza.name,
+                additions,
+                quantity,
+                totalPrice: unitPrice,
+            },
+        ]);
         setAddedToCart(true);
-        setCartCount((prev) => prev + quantity);
         setTimeout(() => setAddedToCart(false), 2500);
     };
 
