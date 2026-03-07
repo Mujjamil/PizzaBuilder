@@ -144,7 +144,8 @@
 .admin-header__right {
     display: flex;
     align-items: center;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .admin-badge {
@@ -559,7 +560,26 @@
 
 @media (max-width: 480px) {
     .admin-panel {
-        padding: 16px;
+        padding: 80px 14px 24px;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .admin-header__right {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .admin-notif-btn,
+    .admin-notif-on,
+    .admin-badge,
+    .admin-refresh {
+        font-size: 0.72rem;
+        padding: 6px 10px;
     }
 
     .admin-order-card__header {
