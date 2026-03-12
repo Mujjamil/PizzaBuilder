@@ -532,6 +532,30 @@
     color: #c9a84c;
 }
 
+.admin-bill__print-btn {
+    display: block;
+    width: calc(100% - 36px);
+    margin: 12px 18px 16px;
+    padding: 11px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #aaa;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.admin-bill__print-btn:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
 @media (max-width: 600px) {
     .admin-bill__info {
         grid-template-columns: 1fr 1fr;

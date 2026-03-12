@@ -29,7 +29,17 @@ export default function PlaceOrderModal({ cartItems, total, onClose, onSuccess }
                 })),
                 total,
             });
-            setConfirmed({ orderNumber });
+            setConfirmed({
+                orderNumber,
+                customerName: name.trim(),
+                customerPhone: phone.trim(),
+                items: cartItems.map((item) => ({
+                    pizzaName: item.pizzaName,
+                    additions: item.additions,
+                    quantity: item.quantity,
+                    totalPrice: item.totalPrice,
+                })),
+            });
         } catch (err) {
             console.error(err);
             setError('Failed to place order. Please check your Firebase config and try again.');

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { subscribeToOrders } from '../utils/ordersDB';
+import { printReceipt } from '../utils/printReceipt';
 import './AdminPanel.css';
 
 const ADMIN_PASSWORD = 'FirstCup@2026';
@@ -256,6 +257,20 @@ export default function AdminPanel() {
                                         <span>Grand Total</span>
                                         <strong className="gold">₹{order.total}</strong>
                                     </div>
+
+                                    {/* Print Button */}
+                                    <button
+                                        className="admin-bill__print-btn"
+                                        onClick={() => printReceipt({
+                                            orderNumber: order.orderNumber,
+                                            customerName: order.customerName,
+                                            customerPhone: order.customerPhone,
+                                            items: order.items,
+                                            total: order.total,
+                                        })}
+                                    >
+                                        🖨️ Print Receipt
+                                    </button>
                                 </div>
                             )}
 
