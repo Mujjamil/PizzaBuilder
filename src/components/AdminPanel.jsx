@@ -14,7 +14,9 @@ export default function AdminPanel() {
     const [error, setError] = useState('');
     const [search, setSearch] = useState('');
     const [expandedOrder, setExpandedOrder] = useState(null);
-    const [notifPermission, setNotifPermission] = useState(Notification.permission);
+    const [notifPermission, setNotifPermission] = useState(() => {
+        try { return Notification.permission; } catch { return 'denied'; }
+    });
     const [newOrderFlash, setNewOrderFlash] = useState(null);
     const audioCtxRef = useRef(null);
 
@@ -37,8 +39,12 @@ export default function AdminPanel() {
 
     // Request notification permission
     const requestNotifPermission = async () => {
-        const result = await Notification.requestPermission();
-        setNotifPermission(result);
+        try {
+            const result = await Notification.requestPermission();
+            setNotifPermission(result);
+        } catch {
+            setNotifPermission('denied');
+        }
     };
 
     // Show browser notification for a new order

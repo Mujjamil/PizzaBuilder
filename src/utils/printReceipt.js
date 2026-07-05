@@ -1,6 +1,14 @@
 /**
  * printReceipt — opens a 58mm thermal-paper receipt in a print window.
- * Compatible with ESC/POS thermal printers set as the default printer.
+ * Optimized for POS-58-SERIES thermal printer (58mm paper width).
+ *
+ * HOW TO SET UP YOUR PRINTER IN BROWSER:
+ *  1. Open the print dialog
+ *  2. Select your POS-58 printer
+ *  3. Under "More settings" → Paper size → select "58mm" or custom 58×auto
+ *  4. Set Margins to "None"
+ *  5. Uncheck "Headers and footers"
+ *  6. Scale = 100%
  */
 export function printReceipt({ orderNumber, customerName, customerPhone, items, total }) {
     const now = new Date();
@@ -24,82 +32,118 @@ export function printReceipt({ orderNumber, customerName, customerPhone, items, 
 <meta charset="UTF-8">
 <title>Receipt ${orderNumber}</title>
 <style>
+  /* ── Page setup for 58mm roll paper ── */
   @page {
     size: 58mm auto;
-    margin: 4mm 2mm;
+    margin: 3mm 0mm;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media print {
+    html, body {
+      width: 58mm !important;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
   body {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 11px;
+    font-size: 14px;         /* was 11px — thermal needs bigger text */
     color: #000;
-    width: 54mm;
+    width: 58mm;
+    padding: 0 1mm;
   }
+
+  /* ── Header / Logo ── */
   .logo {
     text-align: center;
-    font-size: 15px;
+    font-size: 18px;          /* large bold store name */
     font-weight: bold;
     letter-spacing: 1px;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
   .sub {
     text-align: center;
-    font-size: 9px;
+    font-size: 12px;          /* address lines — readable */
     margin-bottom: 2px;
+    line-height: 1.4;
   }
+
+  /* ── Divider ── */
   .divider {
     border: none;
     border-top: 1px dashed #000;
     margin: 5px 0;
   }
+
+  /* ── Order number ── */
+  .order-num {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 4px 0;
+    letter-spacing: 1px;
+  }
+
+  /* ── Info rows (Date / Customer / Phone) ── */
   .info-row {
     display: flex;
     justify-content: space-between;
-    font-size: 10px;
-    margin-bottom: 2px;
+    font-size: 13px;
+    margin-bottom: 3px;
+    line-height: 1.4;
   }
+  .info-label { font-weight: bold; }
+
+  /* ── Items table ── */
   table {
     width: 100%;
     border-collapse: collapse;
     margin: 4px 0;
   }
   th {
-    font-size: 9px;
+    font-size: 13px;
+    font-weight: bold;
     text-align: left;
     border-bottom: 1px solid #000;
     padding-bottom: 3px;
+    padding-top: 2px;
   }
   th.right, td.right { text-align: right; }
   th.center, td.center { text-align: center; }
   td {
-    font-size: 10px;
-    padding: 2px 0;
+    font-size: 13px;
+    padding: 3px 0;
     vertical-align: top;
+    line-height: 1.4;
   }
-  .item-name { width: 55%; }
+  .item-name { width: 56%; word-break: break-word; }
   .item-add {
-    font-size: 8px;
+    font-size: 11px;
     color: #333;
   }
+
+  /* ── Total row ── */
   .total-row {
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
+    font-size: 18px;           /* BIG & BOLD total — like reference receipt */
     font-weight: bold;
-    margin: 4px 0 2px;
+    margin: 5px 0 3px;
   }
+
+  /* ── Footer ── */
   .footer {
     text-align: center;
-    font-size: 9px;
-    margin-top: 6px;
-    line-height: 1.5;
-  }
-  .order-num {
-    text-align: center;
     font-size: 12px;
-    font-weight: bold;
-    margin: 3px 0;
-    letter-spacing: 1px;
+    margin-top: 8px;
+    line-height: 1.7;
   }
 </style>
 </head>
@@ -110,9 +154,9 @@ export function printReceipt({ orderNumber, customerName, customerPhone, items, 
   <div class="sub">Ph: +91 7249377161</div>
   <hr class="divider">
   <div class="order-num">${orderNumber}</div>
-  <div class="info-row"><span>Date:</span><span>${dateStr} ${timeStr}</span></div>
-  <div class="info-row"><span>Customer:</span><span>${customerName}</span></div>
-  <div class="info-row"><span>Phone:</span><span>${customerPhone}</span></div>
+  <div class="info-row"><span class="info-label">Date:</span><span>${dateStr} ${timeStr}</span></div>
+  <div class="info-row"><span class="info-label">Customer:</span><span>${customerName}</span></div>
+  <div class="info-row"><span class="info-label">Phone:</span><span>${customerPhone}</span></div>
   <hr class="divider">
   <table>
     <thead>
@@ -137,10 +181,15 @@ export function printReceipt({ orderNumber, customerName, customerPhone, items, 
 </body>
 </html>`;
 
-    const win = window.open('', '_blank', 'width=220,height=600');
+    // Open a popup sized close to 58mm (~220px) so browser renders at correct scale
+    const win = window.open('', '_blank', 'width=300,height=700,left=100,top=100');
+    if (!win) {
+        alert('Popup blocked! Please allow popups for this site and try again.');
+        return;
+    }
     win.document.write(html);
     win.document.close();
     win.focus();
-    // Slight delay so styles load before print dialog opens
-    setTimeout(() => { win.print(); win.close(); }, 400);
+    // Give styles time to render, then open print dialog
+    setTimeout(() => { win.print(); win.close(); }, 500);
 }
