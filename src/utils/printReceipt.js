@@ -1,14 +1,15 @@
 /**
- * printReceipt — opens a 58mm thermal-paper receipt in a print window.
- * Optimized for POS-58-SERIES thermal printer (58mm paper width).
+ * printReceipt — POS-58-SERIES 58mm thermal receipt printer.
  *
- * HOW TO SET UP YOUR PRINTER IN BROWSER:
- *  1. Open the print dialog
- *  2. Select your POS-58 printer
- *  3. Under "More settings" → Paper size → select "58mm" or custom 58×auto
- *  4. Set Margins to "None"
- *  5. Uncheck "Headers and footers"
- *  6. Scale = 100%
+ * PRINTER SETUP (do this once in Windows):
+ *  1. Go to Windows Settings → Printers → POS-58 → Printer Properties
+ *  2. Set paper size to 58mm (width) in the driver preferences
+ *
+ * BROWSER PRINT DIALOG (each time):
+ *  - Printer: POS-58
+ *  - Margins: None
+ *  - Scale: Fit to page  ← use this, NOT 100%
+ *  - Headers & footers: OFF
  */
 export function printReceipt({ orderNumber, customerName, customerPhone, items, total }) {
     const now = new Date();
@@ -19,7 +20,7 @@ export function printReceipt({ orderNumber, customerName, customerPhone, items, 
         <tr>
             <td class="item-name">
                 ${item.pizzaName}
-                ${item.additions?.length ? `<br><span class="item-add">${item.additions.join(', ')}</span>` : ''}
+                ${item.additions?.length ? `<br><span class="item-add">+ ${item.additions.join(', ')}</span>` : ''}
             </td>
             <td class="center">x${item.quantity}</td>
             <td class="right">&#8377;${item.totalPrice * item.quantity}</td>
@@ -32,16 +33,10 @@ export function printReceipt({ orderNumber, customerName, customerPhone, items, 
 <meta charset="UTF-8">
 <title>Receipt ${orderNumber}</title>
 <style>
-  /* ── Page setup for 58mm roll paper ── */
+  /* ── Page: zero margins, auto-length roll paper ── */
   @page {
     size: 58mm auto;
-    margin: 3mm 0mm;
-  }
-
-  @media print {
-    html, body {
-      width: 58mm !important;
-    }
+    margin: 0;
   }
 
   * {
@@ -52,106 +47,121 @@ export function printReceipt({ orderNumber, customerName, customerPhone, items, 
     print-color-adjust: exact;
   }
 
+  /*
+   * KEY FIX: width: 100% so the content fills the entire paper width.
+   * The browser scales it to fit 58mm — no more tiny text in the corner.
+   * Padding gives small side margins on the physical print.
+   */
   body {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;         /* was 11px — thermal needs bigger text */
+    font-size: 26px;
     color: #000;
-    width: 58mm;
-    padding: 0 1mm;
+    width: 100%;
+    padding: 4px 6px;
+    line-height: 1.4;
   }
 
-  /* ── Header / Logo ── */
-  .logo {
+  /* ── Store header ── */
+  .store-name {
     text-align: center;
-    font-size: 18px;          /* large bold store name */
+    font-size: 34px;
     font-weight: bold;
     letter-spacing: 1px;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
-  .sub {
+  .store-sub {
     text-align: center;
-    font-size: 12px;          /* address lines — readable */
+    font-size: 22px;
     margin-bottom: 2px;
     line-height: 1.4;
   }
 
-  /* ── Divider ── */
+  /* ── Dashed divider ── */
   .divider {
     border: none;
-    border-top: 1px dashed #000;
-    margin: 5px 0;
+    border-top: 2px dashed #000;
+    margin: 6px 0;
   }
 
   /* ── Order number ── */
   .order-num {
     text-align: center;
-    font-size: 15px;
+    font-size: 28px;
     font-weight: bold;
-    margin: 4px 0;
+    margin: 5px 0;
     letter-spacing: 1px;
   }
 
-  /* ── Info rows (Date / Customer / Phone) ── */
+  /* ── Info rows: Date / Customer / Phone ── */
   .info-row {
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
-    margin-bottom: 3px;
+    font-size: 24px;
+    margin-bottom: 4px;
     line-height: 1.4;
   }
-  .info-label { font-weight: bold; }
+  .info-label {
+    font-weight: bold;
+    white-space: nowrap;
+    margin-right: 6px;
+  }
 
   /* ── Items table ── */
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 4px 0;
+    margin: 5px 0;
+  }
+  thead tr {
+    border-bottom: 2px solid #000;
   }
   th {
-    font-size: 13px;
+    font-size: 24px;
     font-weight: bold;
     text-align: left;
-    border-bottom: 1px solid #000;
-    padding-bottom: 3px;
-    padding-top: 2px;
+    padding: 3px 2px 4px;
   }
   th.right, td.right { text-align: right; }
   th.center, td.center { text-align: center; }
   td {
-    font-size: 13px;
-    padding: 3px 0;
+    font-size: 24px;
+    padding: 4px 2px;
     vertical-align: top;
     line-height: 1.4;
   }
-  .item-name { width: 56%; word-break: break-word; }
+  .item-name {
+    width: 54%;
+    word-break: break-word;
+  }
   .item-add {
-    font-size: 11px;
+    font-size: 20px;
     color: #333;
   }
 
-  /* ── Total row ── */
+  /* ── Total ── */
   .total-row {
     display: flex;
     justify-content: space-between;
-    font-size: 18px;           /* BIG & BOLD total — like reference receipt */
+    align-items: center;
+    font-size: 34px;
     font-weight: bold;
-    margin: 5px 0 3px;
+    margin: 6px 0 4px;
   }
 
   /* ── Footer ── */
   .footer {
     text-align: center;
-    font-size: 12px;
-    margin-top: 8px;
+    font-size: 22px;
+    margin-top: 10px;
     line-height: 1.7;
   }
 </style>
 </head>
 <body>
-  <div class="logo">&#127829; FIRST CUP</div>
-  <div class="sub">Taste the Real Coffee</div>
-  <div class="sub">10th Lane, FC Street, Jaysingpur</div>
-  <div class="sub">Ph: +91 7249377161</div>
+  <div class="store-name">&#127829; FIRST CUP</div>
+  <div class="store-sub">Taste the Real Coffee</div>
+  <div class="store-sub">10th Lane, FC Street, Jaysingpur</div>
+  <div class="store-sub">Ph: +91 7249377161</div>
   <hr class="divider">
   <div class="order-num">${orderNumber}</div>
   <div class="info-row"><span class="info-label">Date:</span><span>${dateStr} ${timeStr}</span></div>
@@ -181,8 +191,7 @@ export function printReceipt({ orderNumber, customerName, customerPhone, items, 
 </body>
 </html>`;
 
-    // Open a popup sized close to 58mm (~220px) so browser renders at correct scale
-    const win = window.open('', '_blank', 'width=300,height=700,left=100,top=100');
+    const win = window.open('', '_blank', 'width=400,height=800,left=50,top=50');
     if (!win) {
         alert('Popup blocked! Please allow popups for this site and try again.');
         return;
@@ -190,6 +199,6 @@ export function printReceipt({ orderNumber, customerName, customerPhone, items, 
     win.document.write(html);
     win.document.close();
     win.focus();
-    // Give styles time to render, then open print dialog
-    setTimeout(() => { win.print(); win.close(); }, 500);
+    // Delay lets the browser fully render before opening the print dialog
+    setTimeout(() => { win.print(); win.close(); }, 600);
 }
